@@ -1,12 +1,110 @@
-html, body { margin: 0; height: 100%; background: #f2f0f4; color: #1d1b22; font: 15px/1.4 system-ui, sans-serif; }
-.app { display: flex; gap: 32px; align-items: center; justify-content: center; height: 100%; padding: 24px; box-sizing: border-box; }
-.controls { display: flex; flex-direction: column; gap: 14px; width: 280px; }
-.controls h1 { margin: 0; font-size: 28px; }
-.controls p { margin: 0; color: #5c5866; }
-label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; }
-input[type=text] { font: inherit; padding: 8px; border: 1px solid #c9c4d1; border-radius: 6px; }
-button { font: inherit; font-weight: 700; padding: 10px; border: 0; border-radius: 6px; background: #1d1b22; color: #fff; cursor: pointer; }
-canvas { width: min(70vh, 60vw); height: min(70vh, 60vw); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); }
-body.shot-cover .controls { display: none; }
-body.shot-cover .app { padding: 0; }
-body.shot-cover canvas { width: 100vw; height: 100vh; box-shadow: none; }
+@font-face {
+  font-family: 'Anton';
+  src: url('./fonts/Anton-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pacifico';
+  src: url('./fonts/Pacifico-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  background: #12081d;
+  background-image: radial-gradient(1100px 500px at 85% -10%, rgba(255, 45, 149, 0.28), transparent 60%),
+    radial-gradient(900px 480px at 0% 110%, rgba(255, 140, 40, 0.22), transparent 60%);
+  color: #f5eef7;
+  font: 15px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+.shell { max-width: 1420px; margin: 0 auto; padding: 18px 22px 30px; }
+.topbar { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; margin-bottom: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark {
+  display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 10px;
+  background: linear-gradient(135deg, #ff2d95, #ff7a18 55%, #ffd319);
+  color: #1c0a24; font-family: 'Anton', sans-serif; font-size: 19px; letter-spacing: 1px;
+}
+.brand-name { font-family: 'Anton', sans-serif; font-size: 26px; letter-spacing: 2px; text-transform: uppercase; }
+.tagline { margin: 0; color: #c9b8d2; font-size: 14px; }
+
+.workspace { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 20px; align-items: start; }
+.panel {
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px; padding: 6px 18px 18px;
+  backdrop-filter: blur(6px);
+}
+.group { padding: 14px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.09); }
+.group:last-child { border-bottom: 0; }
+.group h2 { margin: 0 0 10px; font-family: 'Anton', sans-serif; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: #ffd319; }
+.hint { margin: 8px 0 0; color: #c9b8d2; font-size: 13px; }
+.linklike { background: none; border: 0; padding: 0; color: #ff7ad9; cursor: pointer; font: inherit; text-decoration: underline; }
+.field { display: flex; flex-direction: column; gap: 5px; font-weight: 600; font-size: 13px; margin-bottom: 10px; }
+.field input[type=text] {
+  font: inherit; color: #fff; background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 8px; padding: 9px 10px;
+}
+.field input[type=text]:focus { outline: 2px solid #ff2d95; outline-offset: 1px; }
+.field input[type=range] { accent-color: #ff2d95; }
+.toggle { display: flex; gap: 8px; align-items: center; margin-top: 8px; font-size: 14px; cursor: pointer; }
+.toggle input { accent-color: #ff2d95; }
+
+.choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.choice {
+  font: inherit; font-weight: 650; color: #efe6f2; background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 999px; padding: 7px 13px; cursor: pointer;
+}
+.choice:hover { border-color: #ff7ad9; }
+.choice.is-active { background: linear-gradient(135deg, #ff2d95, #ff7a18); border-color: transparent; color: #fff; }
+
+.upload-btn {
+  display: block; text-align: center; font-weight: 700; cursor: pointer;
+  background: linear-gradient(135deg, #ff2d95, #7b2dff); color: #fff;
+  border-radius: 10px; padding: 11px; margin-bottom: 10px;
+}
+.samples { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.samples img {
+  width: 100%; height: 64px; object-fit: cover; display: block; border-radius: 8px; cursor: pointer;
+  border: 2px solid transparent;
+}
+.samples img.is-active { border-color: #ffd319; }
+.samples img:hover { border-color: #ff7ad9; }
+
+.row { display: flex; gap: 8px; }
+button {
+  font: inherit; font-weight: 650; color: #efe6f2; background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 9px; padding: 8px 12px; cursor: pointer;
+}
+button:hover:not(:disabled) { border-color: #ff7ad9; }
+button:disabled { opacity: 0.4; cursor: default; }
+button.primary {
+  display: block; width: 100%; padding: 12px; margin-top: 4px;
+  background: linear-gradient(135deg, #ff2d95, #ff7a18); border: 0; color: #fff; font-size: 16px;
+}
+#exportAllBtn { width: 100%; margin-top: 8px; }
+#status { margin: 10px 0 0; color: #8dffc9; min-height: 1.2em; font-size: 13px; }
+
+.stage { display: flex; flex-direction: column; align-items: center; gap: 10px; position: sticky; top: 12px; }
+#stage {
+  max-width: 100%; max-height: calc(100vh - 150px); width: auto; height: auto;
+  border-radius: 10px; box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.14);
+  background: #1c0a24; cursor: grab; touch-action: none;
+}
+#stage:active { cursor: grabbing; }
+.stage-hint { margin: 0; color: #c9b8d2; font-size: 13px; text-align: center; }
+
+/* Screenshot mode: cover alone, edge to edge. */
+body.shot-cover .topbar, body.shot-cover .panel, body.shot-cover .stage-hint { display: none; }
+body.shot-cover .shell { max-width: none; padding: 0; margin: 0; }
+body.shot-cover .workspace { display: block; }
+body.shot-cover .stage { position: static; }
+body.shot-cover #stage { max-height: none; border-radius: 0; box-shadow: none; width: 100vw; height: 100vh; }
+
+@media (max-width: 900px) {
+  .workspace { grid-template-columns: 1fr; }
+  .stage { position: static; }
+}
